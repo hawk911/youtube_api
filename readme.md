@@ -1,1 +1,3 @@
-﻿exemple parametrs:   -clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title ќбучающее¬идео  -playlist тестлист -keywords "¬идео ќбучение"  -description "ќписание"
+﻿exemple parametrs:  
+*add video: -clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title Обучающее видео  -playlist тестлист -keywords "Тесты, Обучение, xDD"  -description "Описание"
+*delete video:  -clientid="YOU clientID" -secret=" YOU secret" -deleteid VIDEO_YOUTUBE)ID
