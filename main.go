@@ -114,9 +114,9 @@ func main() {
 		}
 
 		/////////////////////////////////////////////////////////////
-		// del_call := service.PlaylistItems.Delete(playlistidfordelete)
+		del_call := service.PlaylistItems.Delete(playlistidfordelete)
 		// UUCyXnQJ2g89ggJjerq-mJvA
-		del_call := service.PlaylistItems.Delete("UUCyXnQJ2g89ggJjerq-mJvA")
+		// del_call := service.PlaylistItems.Delete("UUCyXnQJ2g89ggJjerq-mJvA")
 		if del_call.Do() != nil {
 			log.Fatalf("Error delete for Playlists element. %s", del_call.Do())
 		}
