@@ -1,1 +1,1 @@
-exemple parametrs:   -clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title ОбучающееВидео  -playlist тестлист -keywords "Видео Обучение"  -description "Описание"
+п»їexemple parametrs:   -clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title СњР±СѓС‡Р°СЋС‰РµРµВ¬РёРґРµРѕ  -playlist С‚РµСЃС‚Р»РёСЃС‚ -keywords "В¬РёРґРµРѕ СњР±СѓС‡РµРЅРёРµ"  -description "СњРїРёСЃР°РЅРёРµ"
