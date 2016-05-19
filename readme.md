@@ -1,0 +1,1 @@
+exemple parametrs:   -clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title ќбучающее¬идео  -playlist тестлист -keywords "¬идео ќбучение"  -description "ќписание"
