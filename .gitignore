@@ -6,7 +6,6 @@
 # Folders
 _obj
 _test
-go_api-*
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -17,6 +16,7 @@ go_api-*
 _cgo_defun.c
 _cgo_gotypes.go
 _cgo_export.*
+go_api-*
 
 _testmain.go
 
