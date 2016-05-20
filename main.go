@@ -152,6 +152,12 @@ func main() {
 
 		if *playlist != "" {
 			playlistId := findPlaylist(service, *playlist)
+			if playlistId != "" {
+				log.Printf("Playlist found: %s\n", playlistId)
+			} else {
+				playlistId = createPlaylist(service, *playlist)
+				log.Printf("Playlist created: id=%s", playlistId)
+			}
 			addToPlaylist(service, response.Id, playlistId)
 			log.Printf("Video added to playlist")
 		}
@@ -308,4 +314,26 @@ func addToPlaylist(service *youtube.Service, videoId string, playlistId string) 
 	if err != nil {
 		log.Fatalf("Error adding video to playlist: %v", err)
 	}
+}
+
+func createPlaylist(service *youtube.Service, title string) string {
+	playlists := youtube.NewPlaylistsService(service)
+
+	playlist := youtube.Playlist{
+		Snippet: &youtube.PlaylistSnippet{
+			Title: title,
+		},
+		Status: &youtube.PlaylistStatus{
+			PrivacyStatus: *privacy,
+		},
+	}
+
+	playListsCall := playlists.Insert("snippet,status", &playlist)
+	playlistsResult, err := playListsCall.Do()
+	if err != nil {
+		log.Fatalf("Error inserting playlist: %v", err)
+	}
+	mlib.DebugDump(playlistsResult)
+
+	return playlistsResult.Id
 }
