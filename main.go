@@ -96,11 +96,14 @@ func main() {
 				}
 
 				for _, playlistItem := range playlistResponse.Items {
-					// title := playlistItem.Snippet.Title
+					//					title := playlistItem.Snippet.Title
+					playlistItemId := playlistItem.Id
 					videoId := playlistItem.Snippet.ResourceId.VideoId
-					playlistId := playlistItem.Snippet.PlaylistId
+					//					playlistId := playlistItem.Snippet.PlaylistId
+
 					if *deleteId == videoId {
-						playlistidfordelete = playlistId
+						playlistidfordelete = playlistItemId
+						//						log.Printf(" %v, %v, %v ,%v ", title, videoId, playlistId, playlistItemId)
 					}
 				}
 
@@ -112,11 +115,9 @@ func main() {
 				}
 			}
 		}
-
+		log.Println(playlistidfordelete)
 		/////////////////////////////////////////////////////////////
 		del_call := service.PlaylistItems.Delete(playlistidfordelete)
-		// UUCyXnQJ2g89ggJjerq-mJvA
-		// del_call := service.PlaylistItems.Delete("UUCyXnQJ2g89ggJjerq-mJvA")
 		if del_call.Do() != nil {
 			log.Fatalf("Error delete for Playlists element. %s", del_call.Do())
 		}
