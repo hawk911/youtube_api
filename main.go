@@ -85,10 +85,10 @@ func main() {
 			}
 
 			for _, playlistItem := range playlistResponse.Items {
-				title := playlistItem.Snippet.Title
+				//				title := playlistItem.Snippet.Title
 				playlistItemId := playlistItem.Id
 				videoId := playlistItem.Snippet.ResourceId.VideoId
-				playlistId := playlistItem.Snippet.PlaylistId
+				//				playlistId := playlistItem.Snippet.PlaylistId
 				if *deleteId == videoId {
 					playlistidfordelete = playlistItemId
 					//					log.Printf(" %v, %v, %v ,%v ", title, videoId, playlistId, playlistItemId)
