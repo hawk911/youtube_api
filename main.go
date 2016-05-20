@@ -53,7 +53,7 @@ func main() {
 		ClientID:     valueOrFileContents(*clientID, *clientIDFile),
 		ClientSecret: valueOrFileContents(*secret, *secretFile),
 		Endpoint:     google.Endpoint,
-		Scopes:       []string{youtube.YoutubeScope},
+		Scopes:       []string{youtube.YoutubeScope, youtube.YoutubepartnerScope, youtube.YoutubeForceSslScope},
 	}
 
 	ctx := context.Background()
