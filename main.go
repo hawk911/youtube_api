@@ -105,10 +105,7 @@ func main() {
 		//		}
 
 		del_call := service.PlaylistItems.Delete(playlistidfordelete)
-<<<<<<< HEAD
 
-=======
->>>>>>> c1c63f5b1499038829060800310c9b959c4d0792
 		if del_call.Do() != nil {
 			log.Fatalf("Error delete for Playlists element. %s", del_call.Do())
 		}
@@ -331,7 +328,7 @@ func createPlaylist(service *youtube.Service, title string) string {
 			Title: title,
 		},
 		Status: &youtube.PlaylistStatus{
-			PrivacyStatus: *public,
+			PrivacyStatus: "public",
 		},
 	}
 
