@@ -115,8 +115,7 @@ func main() {
 
 		/////////////////////////////////////////////////////////////
 		del_call := service.PlaylistItems.Delete(playlistidfordelete)
-		// UUCyXnQJ2g89ggJjerq-mJvA
-		// del_call := service.PlaylistItems.Delete("UUCyXnQJ2g89ggJjerq-mJvA")
+
 		if del_call.Do() != nil {
 			log.Fatalf("Error delete for Playlists element. %s", del_call.Do())
 		}
@@ -307,13 +306,16 @@ func findPlaylist(service *youtube.Service, title string) string {
 func addToPlaylist(service *youtube.Service, videoId string, playlistId string) {
 	items := youtube.NewPlaylistItemsService(service)
 
-	itemInsertCall := items.Insert("snippet", &youtube.PlaylistItem{
+	itemInsertCall := items.Insert("snippet,status", &youtube.PlaylistItem{
 		Snippet: &youtube.PlaylistItemSnippet{
 			PlaylistId: playlistId,
 			ResourceId: &youtube.ResourceId{
 				Kind:    "youtube#video",
 				VideoId: videoId,
 			},
+		},
+		Status: &youtube.PlaylistItemStatus{
+			PrivacyStatus: "public",
 		},
 	})
 	_, err := itemInsertCall.Do()
