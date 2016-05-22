@@ -41,7 +41,7 @@ var (
 	description = flag.String("description", "Test Description", "Video description")
 	category    = flag.String("category", "22", "Video category")
 	keywords    = flag.String("keywords", "", "Comma separated list of video keywords")
-	privacy     = flag.String("privacy", "unlisted", "Video privacy status")
+	privacy     = flag.String("privacy", "public", "Video privacy status")
 	playlist    = flag.String("playlist", "", "Playlist name to add video to")
 
 	playlistidfordelete string
@@ -311,7 +311,7 @@ func addToPlaylist(service *youtube.Service, videoId string, playlistId string) 
 			},
 		},
 		// Status: &youtube.PlaylistItemStatus{
-		// 	PrivacyStatus: "public",
+		// 	PrivacyStatus: *privacy,
 		// },
 	})
 	_, err := itemInsertCall.Do()
@@ -328,7 +328,7 @@ func createPlaylist(service *youtube.Service, title string) string {
 			Title: title,
 		},
 		Status: &youtube.PlaylistStatus{
-			PrivacyStatus: "public",
+			PrivacyStatus: *privacy,
 		},
 	}
 
