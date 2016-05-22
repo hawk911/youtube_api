@@ -305,7 +305,7 @@ func findPlaylist(service *youtube.Service, title string) string {
 func addToPlaylist(service *youtube.Service, videoId string, playlistId string) {
 	items := youtube.NewPlaylistItemsService(service)
 
-	itemInsertCall := items.Insert("snippet,status", &youtube.PlaylistItem{
+	itemInsertCall := items.Insert("snippet", &youtube.PlaylistItem{
 		Snippet: &youtube.PlaylistItemSnippet{
 			PlaylistId: playlistId,
 			ResourceId: &youtube.ResourceId{
@@ -313,9 +313,9 @@ func addToPlaylist(service *youtube.Service, videoId string, playlistId string) 
 				VideoId: videoId,
 			},
 		},
-		Status: &youtube.PlaylistItemStatus{
-			PrivacyStatus: "public",
-		},
+		// Status: &youtube.PlaylistItemStatus{
+		// 	PrivacyStatus: "public",
+		// },
 	})
 	_, err := itemInsertCall.Do()
 	if err != nil {
@@ -331,7 +331,7 @@ func createPlaylist(service *youtube.Service, title string) string {
 			Title: title,
 		},
 		Status: &youtube.PlaylistStatus{
-			PrivacyStatus: *privacy,
+			PrivacyStatus: *public,
 		},
 	}
 
