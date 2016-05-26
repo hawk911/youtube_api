@@ -19,7 +19,7 @@ example parameters:
 ### Add Video
 
 ```
--clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title ""Обучающее видео""  -playlist тестлист -keywords "Тесты, Обучение, xDD"  -description ""Описание""
+-clientid="YOU clientID" -secret=" YOU secret" -filename result.mp4 -title "Обучающее видео"  -playlist тестлист -keywords "Тесты, Обучение, xDD"  -description "Описание"
 ```
 
 ### Delete Video
