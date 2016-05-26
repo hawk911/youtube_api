@@ -1,6 +1,6 @@
-﻿# Simple YouTube Client Uploader (Go-Lang)
+﻿# Simple YouTube Client Uploader (Go-Lang) [![Build Status](https://travis-ci.org/hawk911/youtube_api.svg?branch=master)](https://travis-ci.org/hawk911/youtube_api)
 
-provides simple console application, writen on go-lang [![Build Status](https://travis-ci.org/hawk911/youtube_api.svg?branch=master)](https://travis-ci.org/hawk911/youtube_api)
+provides simple console application, writen on go-lang 
 
 ## Download
 
