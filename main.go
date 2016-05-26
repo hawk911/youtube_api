@@ -310,9 +310,6 @@ func addToPlaylist(service *youtube.Service, videoId string, playlistId string) 
 				VideoId: videoId,
 			},
 		},
-		// Status: &youtube.PlaylistItemStatus{
-		// 	PrivacyStatus: *privacy,
-		// },
 	})
 	_, err := itemInsertCall.Do()
 	if err != nil {
