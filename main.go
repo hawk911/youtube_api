@@ -35,7 +35,7 @@ var (
 	secretFile = flag.String("secret-file", "clientsecret.dat",
 		"Name of a file containing just the project's OAuth 2.0 Client Secret from https://developers.google.com/console.")
 	cacheToken  = flag.Bool("cachetoken", true, "cache the OAuth 2.0 token")
-	deleteId    = flag.String("deleteid", "", "Video delete")
+	deleteID    = flag.String("deleteid", "", "Video delete")
 	filename    = flag.String("filename", "", "Name of video file to upload")
 	title       = flag.String("title", "Test Title", "Video title")
 	description = flag.String("description", "Test Description", "Video description")
@@ -44,7 +44,7 @@ var (
 	privacy     = flag.String("privacy", "public", "Video privacy status")
 	playlist    = flag.String("playlist", "", "Playlist name to add video to")
 
-	playlistidfordelete string
+	playlistsidslice []string
 )
 
 func main() {
@@ -65,53 +65,50 @@ func main() {
 		log.Fatalf("Error creating YouTube client: %v", err)
 	}
 
-	if *deleteId != "" {
-		playlistId := findPlaylist(service, *playlist)
+	if *deleteID != "" {
+		playlistIdslice := findPlaylist(service, *playlist)
 		nextPageToken := ""
-		for {
-			// Call the playlistItems.list method to retrieve the
-			// list of uploaded videos. Each request retrieves 50
-			// videos until all videos have been retrieved.
-			playlistCall := service.PlaylistItems.List("snippet").
-				PlaylistId(playlistId).
-				MaxResults(50).
-				PageToken(nextPageToken)
+		for i := range playlistIdslice {
+			for {
+				// Call the playlistItems.list method to retrieve the
+				// list of uploaded videos. Each request retrieves 50
+				// videos until all videos have been retrieved.
+				playlistCall := service.PlaylistItems.List("snippet").
+					PlaylistId(playlistIdslice[i]).
+					MaxResults(50).
+					PageToken(nextPageToken)
 
-			playlistResponse, err := playlistCall.Do()
+				playlistResponse, err := playlistCall.Do()
 
-			if err != nil {
-				// The playlistItems.list method call returned an error.
-				log.Fatalf("Error fetching playlist items: %v", err.Error())
-			}
+				if err != nil {
+					// The playlistItems.list method call returned an error.
+					log.Fatalf("Error fetching playlist items: %v", err.Error())
+				}
 
-			for _, playlistItem := range playlistResponse.Items {
-				//				title := playlistItem.Snippet.Title
-				playlistItemId := playlistItem.Id
-				videoId := playlistItem.Snippet.ResourceId.VideoId
-				//				playlistId := playlistItem.Snippet.PlaylistId
-				if *deleteId == videoId {
-					playlistidfordelete = playlistItemId
-					//					log.Printf(" %v, %v, %v ,%v ", title, videoId, playlistId, playlistItemId)
+				for _, playlistItem := range playlistResponse.Items {
+					playlistItemID := playlistItem.Id
+					videoID := playlistItem.Snippet.ResourceId.VideoId
+
+					if *deleteID == videoID {
+						delCall := service.PlaylistItems.Delete(playlistItemID)
+
+						if delCall.Do() != nil {
+							log.Fatalf("Error delete for Playlists element. %s", delCall.Do())
+						}
+						log.Println("Delete Video from Playlist")
+					}
+				}
+
+				// Set the token to retrieve the next page of results
+				// or exit the loop if all results have been retrieved.
+				// nextPageToken = playlistResponse.NextPageToken
+				if nextPageToken == "" {
+					break
 				}
 			}
-
-			// Set the token to retrieve the next page of results
-			// or exit the loop if all results have been retrieved.
-			// nextPageToken = playlistResponse.NextPageToken
-			if nextPageToken == "" {
-				break
-			}
 		}
-		//		}
 
-		del_call := service.PlaylistItems.Delete(playlistidfordelete)
-
-		if del_call.Do() != nil {
-			log.Fatalf("Error delete for Playlists element. %s", del_call.Do())
-		}
-		log.Println("Delete Video from Playlist")
-
-		del := service.Videos.Delete(*deleteId)
+		del := service.Videos.Delete(*deleteID)
 		if del.Do() != nil {
 			log.Fatalf("Error delete YouTube : %v", del.Do())
 		}
@@ -152,14 +149,16 @@ func main() {
 		fmt.Printf("Upload successful! Video ID: %v\n", response.Id)
 
 		if *playlist != "" {
-			playlistId := findPlaylist(service, *playlist)
-			if playlistId != "" {
-				log.Printf("Playlist found: %s\n", playlistId)
+			playlistIdslice := findPlaylist(service, *playlist)
+			fmt.Println(playlistIdslice)
+			fmt.Println(len(playlistIdslice))
+			if len(playlistIdslice) != 0 {
+				log.Printf("Playlist found: %s\n", playlistIdslice[0])
 			} else {
-				playlistId = createPlaylist(service, *playlist)
-				log.Printf("Playlist created: id=%s", playlistId)
+				playlistIdslice = createPlaylist(service, *playlist)
+				log.Printf("Playlist created: id=%s", playlistIdslice[0])
 			}
-			addToPlaylist(service, response.Id, playlistId)
+			addToPlaylist(service, response.Id, playlistIdslice)
 			log.Printf("Video added to playlist")
 		}
 	}
@@ -281,7 +280,7 @@ func openURL(url string) {
 	log.Printf("Error opening URL in browser.")
 }
 
-func findPlaylist(service *youtube.Service, title string) string {
+func findPlaylist(service *youtube.Service, title string) []string {
 	playlists := youtube.NewPlaylistsService(service)
 	playListsCall := playlists.List("snippet")
 	playListsCall.Mine(true)
@@ -290,24 +289,27 @@ func findPlaylist(service *youtube.Service, title string) string {
 		log.Fatalf("Error listing playlists: %v", err)
 	}
 
-	for _, item := range playlistsResult.Items {
+	for _, item := range playlistsResult.Items { // search of playlist
 		mlib.DebugDump(item)
 		if item.Snippet.Title == title {
-			return item.Id
+			playlistsidslice = append(playlistsidslice, item.Id)
+			return playlistsidslice
 		}
+		playlistsidslice = append(playlistsidslice, item.Id)
 	}
-	return ""
+	return playlistsidslice
 }
 
-func addToPlaylist(service *youtube.Service, videoId string, playlistId string) {
+func addToPlaylist(service *youtube.Service, videoID string, playlistIdslice []string) {
 	items := youtube.NewPlaylistItemsService(service)
-
+	fmt.Println(playlistIdslice[0])
+	fmt.Println(videoID)
 	itemInsertCall := items.Insert("snippet", &youtube.PlaylistItem{
 		Snippet: &youtube.PlaylistItemSnippet{
-			PlaylistId: playlistId,
+			PlaylistId: playlistIdslice[0],
 			ResourceId: &youtube.ResourceId{
 				Kind:    "youtube#video",
-				VideoId: videoId,
+				VideoId: videoID,
 			},
 		},
 	})
@@ -317,7 +319,7 @@ func addToPlaylist(service *youtube.Service, videoId string, playlistId string) 
 	}
 }
 
-func createPlaylist(service *youtube.Service, title string) string {
+func createPlaylist(service *youtube.Service, title string) []string {
 	playlists := youtube.NewPlaylistsService(service)
 
 	playlist := youtube.Playlist{
@@ -336,5 +338,6 @@ func createPlaylist(service *youtube.Service, title string) string {
 	}
 	mlib.DebugDump(playlistsResult)
 
-	return playlistsResult.Id
+	playlistsidslice = append(playlistsidslice, playlistsResult.Id)
+	return playlistsidslice
 }
