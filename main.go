@@ -293,11 +293,11 @@ func findPlaylist(service *youtube.Service, title string) []string {
 		mlib.DebugDump(item)
 		if item.Snippet.Title == title {
 			playlistsidslice = append(playlistsidslice, item.Id)
-			return playlistsidslice
+			return playlistsidslice // тут ошибка
 		}
 		playlistsidslice = append(playlistsidslice, item.Id)
 	}
-	return playlistsidslice
+	return playlistsidslice // тут ошибка
 }
 
 func addToPlaylist(service *youtube.Service, videoID string, playlistIdslice []string) {
